@@ -8,7 +8,7 @@
 #include "Dict.h"
 #include "TableEntry.h"
 
-// ⚠️ MODIFICA ESTA RUTA SEGÚN TU ESTRUCTURA DE CARPETAS
+
 #include "../pracica1/PRA_2324_P1/ListLinked.h"
 
 template <typename V>
