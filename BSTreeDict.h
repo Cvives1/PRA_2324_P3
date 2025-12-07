@@ -30,9 +30,9 @@ class BSTreeDict: public Dict<V> {
 	return search(key);
 	}
 
-	int entries() const override;          // llama tree->size()
+	int entries()  override;          // llama tree->size()
     	void insert(std::string key, V value) override;  // llama tree->insert(TableEntry)
-    	V search(std::string key) const override;       // llama tree->search(TableEntry)
+    	V search(std::string key)  override;       // llama tree->search(TableEntry)
    	V remove(std::string key) override;             // llama tree->remove(TableEntry)
         
 };
