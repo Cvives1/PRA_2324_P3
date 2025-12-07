@@ -5,145 +5,143 @@
 #include <stdexcept>
 #include "BSNode.h"
 
-template <typename T> 
+template <typename T>
 class BSTree {
     private:
-        //miembros privados
-	int nelem;
-	BSNode<T> *root;
-	
-	BSNode<T>* search(BSNode<T>* n, T e) const{
-	if(n==nullptr){
-	throw std::runtime_error("Elemento no encontado");
-	}
-	if(e<n->elem){
-	return search(n->left, e);
-	}
-	else if(e>n->elem){
-	return search(n->right, e);	
-	}
-	else{return n;}
-	}
+        int nelem;
+        BSNode<T>* root;
 
-
-	BSNode<T>* insert(BSNode<T>* n, T e){
-	if(n==nullptr){
-        return new BSNode<T>(e);
-        }
-	if(e==n->elem){
-	throw std::runtime_error("Elemento duplicado");
-	}
-        if(e<n->elem){
-        n->left=insert(n->left, e);
-        }
-        else{
-		n->right=insert(n->right,e);
-		}
-	return n;
+        BSNode<T>* search(BSNode<T>* n, T e) const {
+            if (n == nullptr) {
+                throw std::runtime_error("Elemento no encontrado");
+            }
+            if (e < n->elem) {
+                return search(n->left, e);
+            }
+            else if (e > n->elem) {
+                return search(n->right, e);
+            }
+            else {
+                return n;
+            }
         }
 
-
-	
-	void print_inorder(std::ostream &out, BSNode<T>* n) const{
-	if(!n){
-		return;
-	}
-	print_inorder(out, n->left);
-	out<<n->elem<<" ";
-	print_inorder(out,n->right);
-	}
-
-
-	BSNode<T>* remove(BSNode<T>* n, T e){
-	if(!n){
-	throw std::runtime_error("Elemento no encontrado");
-	}
-	if(e<n->elem){
-	n->left=remove(n->left,e);
-	}
-	else if(e>n->elem){
-        n->right=remove(n->right,e);
+        BSNode<T>* insert(BSNode<T>* n, T e) {
+            if (n == nullptr) {
+                return new BSNode<T>(e);
+            }
+            if (e == n->elem) {
+                throw std::runtime_error("Elemento duplicado");
+            }
+            if (e < n->elem) {
+                n->left = insert(n->left, e);
+            }
+            else {
+                n->right = insert(n->right, e);
+            }
+            return n;
         }
-	else if(n->left && n->right){
-	n->elem=max(n->left);
-	n->left=remove_max(n->left);
-	}
-	else{
-	BSNode<T>* temp = (n->left) ? n->left : n->right;
-	delete n;
-	return temp;
-	}
-	return n;
-	}
 
-
-	T max(BSNode<T>* n) const{
-	if(n->right){
-	return max(n->right);
-	}
-	return n->elem;
-	}
-
-
-	BSNode<T>* remove_max(BSNode<T>* n){
-	if(!n->right){
-	BSNode<T>* leftChild= n->left;
-	delete n;
-	return leftChild;
-	}
-	n->right=remove_max(n->right);
-	return n;
-	}
-
-
-	void delete_cascade(BSNode<T>* n){
-	if(!n){
+        void print_inorder(std::ostream &out, BSNode<T>* n) const {
+            if (!n) {
                 return;
+            }
+            print_inorder(out, n->left);
+            out << n->elem << " ";
+            print_inorder(out, n->right);
         }
-	delete_cascade(n->left);
-	delete_cascade(n->right);
-	delete n;
-	}
 
+        BSNode<T>* remove(BSNode<T>* n, T e) {
+            if (!n) {
+                throw std::runtime_error("Elemento no encontrado");
+            }
+            if (e < n->elem) {
+                n->left = remove(n->left, e);
+            }
+            else if (e > n->elem) {
+                n->right = remove(n->right, e);
+            }
+            else if (n->left && n->right) {
+                n->elem = max(n->left);
+                n->left = remove_max(n->left);
+            }
+            else {
+                BSNode<T>* temp = (n->left) ? n->left : n->right;
+                delete n;
+                return temp;
+            }
+            return n;
+        }
+
+        T max(BSNode<T>* n) const {
+            if (n->right) {
+                return max(n->right);
+            }
+            return n->elem;
+        }
+
+        BSNode<T>* remove_max(BSNode<T>* n) {
+            if (!n->right) {
+                BSNode<T>* leftChild = n->left;
+                delete n;
+                return leftChild;
+            }
+            n->right = remove_max(n->right);
+            return n;
+        }
+
+        void delete_cascade(BSNode<T>* n) {
+            if (!n) {
+                return;
+            }
+            delete_cascade(n->left);
+            delete_cascade(n->right);
+            delete n;
+        }
 
     public:
-        // miembros públicos
-    	BSTree(){
-	nelem=0;
-	root=nullptr;
-	}
+        BSTree() : nelem(0), root(nullptr) {}
 
-	int size() const{
-	return nelem;
-	}
+        int size() const {
+            return nelem;
+        }
 
-	T search(T e) const{
-	return search(root, e)->elem;
-	}
+        T search(T e) const {
+            return search(root, e)->elem;
+        }
 
+        T operator[](T e) const {
+            return search(e);
+        }
 
-	T operator[](T e) const{
-	return search(e);
-	}
-	void insert(T e){
-		root=insert(root, e);
-		nelem++;
-	
-	}
+        void insert(T e) {
+            root = insert(root, e);
+            nelem++;
+        }
 
-	friend std::ostream& operator<<(std::ostream &out, const BSTree<T> &bst){
-		bst.print_inorder(out, bst.root);
-		return out;
-	}
-	void remove(T e){
-		root=remove(root,e);
-		nelem--;
-	}
-	~BSTree(){
-	delete_cascade(root);
-	}
-	
+        void remove(T e) {
+            root = remove(root, e);
+            nelem--;
+        }
 
+        // Nuevo método público para acceder al root
+        BSNode<T>* getRoot() const {
+            return root;
+        }
+
+        // Método público para imprimir el árbol en orden
+        void print_inorder(std::ostream& out) const {
+            print_inorder(out, root);
+        }
+
+        ~BSTree() {
+            delete_cascade(root);
+        }
+
+        friend std::ostream& operator<<(std::ostream& out, const BSTree<T>& bst) {
+            bst.print_inorder(out);
+            return out;
+        }
 };
 
-#endif
+#endif // BSTREE_H
