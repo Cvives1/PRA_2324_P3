@@ -62,9 +62,10 @@ V BSTreeDict<V>::search(std::string key) {
 
 template <typename V>
 V BSTreeDict<V>::remove(std::string key) {
-    TableEntry<V> te(key, V());
+    TableEntry<V> te(key,V());
+    TableEntry<V> found = tree-> search(te);
     tree->remove(te);  // Llamada al método remove() de BSTree, no es necesario almacenar el valor
-    return te.value;    // Retorna el valor de la entrada eliminada
+    return found.value;    // Retorna el valor de la entrada eliminada
 }
 
 #endif // BSTREEDICT_H

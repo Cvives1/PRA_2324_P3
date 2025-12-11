@@ -38,7 +38,7 @@ public:
 
     // Para imprimir la entrada
     friend std::ostream& operator<<(std::ostream& out, const TableEntry<V>& e) {
-        out << "(" << e.key << ", " << e.value << ")";
+        out << "('" << e.key << "'=> " << e.value << ")";
         return out;
     }
 };
