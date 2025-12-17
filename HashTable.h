@@ -98,7 +98,7 @@ int hash(std::string key) const {
 
         // Devuelve número de elementos en la tabla
         int entries() override {
-            return nElems;
+            return nEntries;
        }
 
         // Para imprimir la tabla (opcional pero útil)
